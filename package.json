@@ -1,0 +1,30 @@
+{
+  "name": "gas-notifier-bot",
+  "version": "1.0.0",
+  "description": "notify you on discord when gas hits a certain level",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "main": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wlhunter00/Gas-Notifier-Bot.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wlhunter00/Gas-Notifier-Bot/issues"
+  },
+  "homepage": "https://github.com/wlhunter00/Gas-Notifier-Bot#readme",
+  "dependencies": {
+    "@discordjs/builders": "^0.8.2",
+    "@discordjs/rest": "^0.1.0-canary.0",
+    "axios": "^0.24.0",
+    "discord-api-types": "^0.24.0",
+    "discord.js": "^13.3.1",
+    "dotenv": "^10.0.0",
+    "nodemon": "^2.0.15"
+  }
+}
