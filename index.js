@@ -46,10 +46,6 @@ client.once('ready', async () => {
 // });
 
 client.on('interactionCreate', async interaction => {
-    const query = { gasLevel: 5 };
-    const gasObj = await GasList.findOne(query);
-    console.log(gasObj);
-
     if (!interaction.isCommand()) return;
 
     const command = client.commands.get(interaction.commandName);
@@ -57,7 +53,7 @@ client.on('interactionCreate', async interaction => {
     if (!command) return;
 
     try {
-        await command.execute(interaction);
+        await command.execute(interaction, GasList);
     } catch (error) {
         console.error(error);
         await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
