@@ -1,4 +1,13 @@
+// Import ENV
 require('dotenv').config();
+
+// Mongo imports
+const { MongoClient } = require('mongodb');
+const uri = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PW}@cluster0.wqfvl.mongodb.net/GasBot?retryWrites=true&w=majority`;
+const dbClient = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+let GasList;
+
+// Discord imports
 const fs = require('fs');
 const { Client, Collection, Intents } = require('discord.js');
 const client = new Client({
@@ -11,13 +20,15 @@ const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('
 
 for (const file of commandFiles) {
     const command = require(`./commands/${file}`);
-    // Set a new item in the Collection
-    // With the key as the command name and the value as the exported module
     client.commands.set(command.data.name, command);
 }
 
 // Once logged in
-client.once('ready', () => {
+client.once('ready', async () => {
+    await dbClient.connect();
+    const database = dbClient.db('GasBot');
+    GasList = database.collection('TrackingList');
+    console.log("Database connected:", GasList.namespace);
     console.log(`Logged in as ${client.user.tag}!`);
 });
 
@@ -35,6 +46,10 @@ client.once('ready', () => {
 // });
 
 client.on('interactionCreate', async interaction => {
+    const query = { gasLevel: 5 };
+    const gasObj = await GasList.findOne(query);
+    console.log(gasObj);
+
     if (!interaction.isCommand()) return;
 
     const command = client.commands.get(interaction.commandName);

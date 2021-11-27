@@ -11,6 +11,7 @@ module.exports = {
     async execute(interaction) {
         const gasLevel = interaction.options.getInteger('gas');
         console.log(gasLevel);
+        console.log(interaction.user);
 
         if (gasLevel < 0 || gasLevel > 10000) {
             await interaction.reply(`${gasLevel} is out of reasonable range for GWEI!`);
