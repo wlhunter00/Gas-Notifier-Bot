@@ -53,14 +53,13 @@ module.exports = {
                 ];
 
                 // Update document
-                const filter = { gasLevel: gasLevel };
                 const updateDoc = {
                     $set: {
                         userLists: extendedList
                     },
                 };
 
-                const result = await db.updateOne(filter, updateDoc);
+                const result = await db.updateOne(query, updateDoc);
                 console.log(
                     `${result.matchedCount} document(s) matched the filter, updated ${result.modifiedCount} document(s)`,
                 );
