@@ -109,4 +109,4 @@ setInterval(async function () {
             console.error(error);
         }
     }
-}, 10000);
+}, 20000);
