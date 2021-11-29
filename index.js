@@ -32,19 +32,6 @@ client.once('ready', async () => {
     console.log(`Logged in as ${client.user.tag}!`);
 });
 
-// // Old Message Type
-// client.on('messageCreate', msg => {
-//     if (msg.content === '!ping') {
-//         msg.reply('Pong!');
-//     }
-// let prefix = "!";
-// if (message.content.startsWith("prefix")) {
-//     const args = message.content.slice(prefix.length).trim().split(/ +/);
-//     const commandName = args.shift().toLowerCase();
-// }
-
-// });
-
 client.on('interactionCreate', async interaction => {
     if (!interaction.isCommand()) return;
 
@@ -58,6 +45,9 @@ client.on('interactionCreate', async interaction => {
         console.error(error);
         await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
     }
+
+    // Now setup a 5 minute running timer, and inside call axios fetch to etherscan.
+
 });
 
 // ENV client token
