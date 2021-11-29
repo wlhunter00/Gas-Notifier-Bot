@@ -75,14 +75,13 @@ module.exports = {
                     {
                         userID: interaction.user.id,
                         userObj: interaction.user,
-                        guildID: interaction.guild.id,
-                        guildName: interaction.guild.name,
+                        guildID: interaction.guild?.id,
+                        guildName: interaction.guild?.name,
                         timeInserted: new Date(),
                         // repeat: repeatValue,
                     },
                 ],
             }
-
             // Insert data
             const result = await db.insertOne(insertData);
             console.log(`Created new tracking alert for ${gasLevel} GWEI, for user ${interaction.user.username}, with ID:${result.insertedId}`);
