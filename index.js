@@ -94,6 +94,7 @@ setInterval(async function () {
                 }
                 console.log(`Notified ${notifiedUserIDs.length} users`);
                 // Set updated list (reuse query from before)
+                // TODO: Refine this so that we can have repeat objects (requires cooldowns). Basically clear the userlist array, unless repeat is true (and if repeat is true, then set the cooldown). Going to want to check for cooldown in original query.
                 const updatedUserList = {
                     $set: {
                         userLists: []
