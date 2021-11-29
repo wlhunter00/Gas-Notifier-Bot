@@ -14,6 +14,9 @@ const client = new Client({
     intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES]
 });
 
+// Setup API Call
+let clientLogin = false;
+
 // Retrive commands
 client.commands = new Collection();
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
@@ -30,6 +33,7 @@ client.once('ready', async () => {
     GasList = database.collection('TrackingList');
     console.log("Database connected:", GasList.namespace);
     console.log(`Logged in as ${client.user.tag}!`);
+    clientLogin = true;
 });
 
 // // Old Message Type
@@ -44,6 +48,13 @@ client.once('ready', async () => {
 // }
 
 // });
+
+while (clientLogin) {
+    console.log(clientLogin);
+    setInterval(function () {
+        console.log("test");
+    }, 5000)
+}
 
 client.on('interactionCreate', async interaction => {
     if (!interaction.isCommand()) return;
