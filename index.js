@@ -16,6 +16,7 @@ const client = new Client({
 
 // Setup API Call
 let clientLogin = false;
+const axios = require('axios');
 
 // Retrive commands
 client.commands = new Collection();
@@ -36,14 +37,8 @@ client.once('ready', async () => {
     clientLogin = true;
 });
 
-while (clientLogin) {
-    console.log(clientLogin);
-    setInterval(function () {
-        console.log("test");
-    }, 5000)
-}
-
 client.on('interactionCreate', async interaction => {
+    console.log(clientLogin);
     if (!interaction.isCommand()) return;
 
     const command = client.commands.get(interaction.commandName);
@@ -57,9 +52,49 @@ client.on('interactionCreate', async interaction => {
         await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
     }
 
-    // Now setup a 5 minute running timer, and inside call axios fetch to etherscan.
 
 });
 
 // ENV client token
 client.login(process.env.CLIENT_TOKEN);
+
+// Now setup a 5 minute running timer, and inside call axios fetch to etherscan.
+setInterval(async function () {
+    // If logged in to a discord server
+    if (clientLogin) {
+        try {
+            // Retrieve gas data from etherscan
+            const response = await axios.get(`https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=${process.env.ETHERSCAN_API_KEY}`);
+            const gasPrice = parseInt(response.data.result.ProposeGasPrice);
+            console.log("gas price", gasPrice);
+
+            // Retrieve all gas objects from api lower than value with a non-empty userlist
+            const query = { gasLevel: { $gt: gasPrice + 1 }, userLists: { $exists: true, $type: 'array', $ne: [] } };
+            const gasObjects = await GasList.find(query).toArray();
+
+            // List of users already pinged
+            let notifiedUserIDs = [];
+
+            // For each gas object
+            for await (const gasObject of gasObjects) {
+                // Get user list
+                const userList = gasObject.userLists;
+                // For each user
+                for await (const user of userList) {
+                    // If we haven't messaged the user already
+                    if (!notifiedUserIDs.includes(user.userID)) {
+                        const sendUser = await client.users.fetch(user.userID);
+                        sendUser.send(`Hey <@${user.userID}>, gas is at ${gasPrice} GWEI! (You wanted to be notified once gas was lower than ${gasObject.gasLevel} GWEI)`);
+                        // Add user to the list
+                        notifiedUserIDs.push(user.userID);
+                    }
+                }
+
+                // Now clear the user list on each gas object
+            }
+
+        } catch (error) {
+            console.error(error);
+        }
+    }
+}, 10000);

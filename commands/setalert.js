@@ -7,13 +7,13 @@ module.exports = {
         .addIntegerOption(option =>
             option.setName('gas')
                 .setDescription('Minimum GWEI level to be notified about')
-                .setRequired(true))
-        .addBooleanOption(option =>
-            option.setName('repeat')
-                .setDescription('Have this be a repeat alert (once a day)')),
+                .setRequired(true)),
+    // .addBooleanOption(option =>
+    //     option.setName('repeat')
+    //         .setDescription('Have this be a repeat alert (once a day)')),
     async execute(interaction, db) {
         const gasLevel = interaction.options.getInteger('gas');
-        const repeatValue = interaction.options.getBoolean('repeat') || false;
+        // const repeatValue = interaction.options.getBoolean('repeat') || false;
 
         // If not acceptable level, return
         if (gasLevel < 0 || gasLevel > 10000) {
@@ -43,7 +43,7 @@ module.exports = {
                     guildID: interaction.guild.id,
                     guildName: interaction.guild.name,
                     timeInserted: new Date(),
-                    repeat: repeatValue,
+                    // repeat: repeatValue,
                 };
 
                 // Extend the user list
@@ -78,7 +78,7 @@ module.exports = {
                         guildID: interaction.guild.id,
                         guildName: interaction.guild.name,
                         timeInserted: new Date(),
-                        repeat: repeatValue,
+                        // repeat: repeatValue,
                     },
                 ],
             }
