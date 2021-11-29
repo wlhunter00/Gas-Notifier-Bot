@@ -66,31 +66,42 @@ setInterval(async function () {
             // Retrieve gas data from etherscan
             const response = await axios.get(`https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=${process.env.ETHERSCAN_API_KEY}`);
             const gasPrice = parseInt(response.data.result.ProposeGasPrice);
-            console.log("gas price", gasPrice);
+            const currentTime = new Date();
+            console.log(currentTime.toISOString(), "gas price", gasPrice);
 
             // Retrieve all gas objects from api lower than value with a non-empty userlist
             const query = { gasLevel: { $gt: gasPrice + 1 }, userLists: { $exists: true, $type: 'array', $ne: [] } };
             const gasObjects = await GasList.find(query).toArray();
+            // If array isn't empty
+            if (gasObjects.length !== 0) {
+                // List of users already pinged
+                let notifiedUserIDs = [];
 
-            // List of users already pinged
-            let notifiedUserIDs = [];
-
-            // For each gas object
-            for await (const gasObject of gasObjects) {
-                // Get user list
-                const userList = gasObject.userLists;
-                // For each user
-                for await (const user of userList) {
-                    // If we haven't messaged the user already
-                    if (!notifiedUserIDs.includes(user.userID)) {
-                        const sendUser = await client.users.fetch(user.userID);
-                        sendUser.send(`Hey <@${user.userID}>, gas is at ${gasPrice} GWEI! (You wanted to be notified once gas was lower than ${gasObject.gasLevel} GWEI)`);
-                        // Add user to the list
-                        notifiedUserIDs.push(user.userID);
+                // For each gas object
+                for await (const gasObject of gasObjects) {
+                    // Get user list
+                    const userList = gasObject.userLists;
+                    // For each user
+                    for await (const user of userList) {
+                        // If we haven't messaged the user already
+                        if (!notifiedUserIDs.includes(user.userID)) {
+                            const sendUser = await client.users.fetch(user.userID);
+                            sendUser.send(`Hey <@${user.userID}>, gas is at ${gasPrice} GWEI! (You wanted to be notified once gas was lower than ${gasObject.gasLevel} GWEI)`);
+                            // Add user to the list
+                            notifiedUserIDs.push(user.userID);
+                        }
                     }
                 }
-
-                // Now clear the user list on each gas object
+                console.log(`Notified ${notifiedUserIDs.length} users`);
+                // Set updated list (reuse query from before)
+                const updatedUserList = {
+                    $set: {
+                        userLists: []
+                    },
+                };
+                // Update any applicable alert levels
+                const result = await GasList.updateMany(query, updatedUserList);
+                console.log(`${result.matchedCount} document(s) matched the filter, updated ${result.modifiedCount} document(s)`);
             }
 
         } catch (error) {
