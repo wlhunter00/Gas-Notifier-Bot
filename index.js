@@ -69,6 +69,8 @@ setInterval(async function () {
             const currentTime = new Date();
             console.log(currentTime.toISOString(), "gas price", gasPrice);
 
+            client.user.setActivity(`⚡${gasPrice} GWEI /setalert`, { type: 'WATCHING' });
+
             // Retrieve all gas objects from api lower than value with a non-empty userlist
             const query = { gasLevel: { $gt: gasPrice + 1 }, userLists: { $exists: true, $type: 'array', $ne: [] } };
             const gasObjects = await GasList.find(query).toArray();
