@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "main": "node index.js",
     "dev": "nodemon index.js",
-    "database": "node database.js"
+    "database": "node database.js",
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
@@ -28,5 +29,8 @@
     "dotenv": "^10.0.0",
     "mongodb": "^4.2.0",
     "nodemon": "^2.0.15"
+  },
+  "engines": {
+    "node": "16.13.x"
   }
 }
