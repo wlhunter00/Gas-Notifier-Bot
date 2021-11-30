@@ -38,7 +38,6 @@ client.once('ready', async () => {
 });
 
 client.on('interactionCreate', async interaction => {
-    console.log(clientLogin);
     if (!interaction.isCommand()) return;
 
     const command = client.commands.get(interaction.commandName);
