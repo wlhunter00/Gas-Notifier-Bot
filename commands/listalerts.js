@@ -9,11 +9,11 @@ module.exports = {
         console.log("Listing events for", uID);
         const query = { 'userLists.userID': uID };
         const trackerList = await db.find(query).toArray();
-        // TODO: eventually sort output
+        const sorted = [...trackerList].sort((a, b) => (a["gasLevel"] > b["gasLevel"]) - (a["gasLevel"] < b["gasLevel"]));
 
         let finalString = "You have trackers set at the following GWEI amounts: ";
 
-        trackerList.forEach(level => {
+        sorted.forEach(level => {
             finalString = finalString + "**" + level.gasLevel + "**, ";
         });
 
