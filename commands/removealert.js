@@ -15,14 +15,14 @@ module.exports = {
 
         // If the object hasn't been created 
         if (!gasObj) {
-            await interaction.reply(`You don't have any alerts set at ${gasLevel} GWEI!`);
+            await interaction.reply({ content: `You don't have any alerts set at ${gasLevel} GWEI!`, ephemeral: true });
             return;
         }
 
         // If the object has been created but user isn't in the list
         const userRemoved = gasObj.userLists.find(user => user.userID === interaction.user.id);
         if (!userRemoved) {
-            await interaction.reply(`You don't have any alerts set at ${gasLevel} GWEI!`);
+            await interaction.reply({ content: `You don't have any alerts set at ${gasLevel} GWEI!`, ephemeral: true });
             return;
         }
 
@@ -40,6 +40,6 @@ module.exports = {
             `${result.matchedCount} document(s) matched the filter, updated ${result.modifiedCount} document(s)`,
         );
 
-        await interaction.reply(`Removed alert at ${gasLevel} GWEI!`);
+        await interaction.reply({ content: `Removed alert at ${gasLevel} GWEI`, ephemeral: true });
     },
 };

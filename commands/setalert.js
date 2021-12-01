@@ -17,7 +17,7 @@ module.exports = {
 
         // If not acceptable level, return
         if (gasLevel < 0 || gasLevel > 10000) {
-            await interaction.reply(`${gasLevel} is out of reasonable range for GWEI!`);
+            await interaction.reply({ content: `${gasLevel} is out of reasonable range for GWEI!`, ephemeral: true });
             return;
         }
 
@@ -31,7 +31,7 @@ module.exports = {
             const userInserted = gasObj.userLists.find(user => user.userID === interaction.user.id);
             if (userInserted) {
                 console.log(`Alert already set, user ${userInserted.userID}`);
-                await interaction.reply(`You already have an alert set at ${gasLevel} GWEI!`);
+                await interaction.reply({ content: `You already have an alert set at ${gasLevel} GWEI!`, ephemeral: true });
                 return;
             }
             // If not on the list
@@ -87,6 +87,6 @@ module.exports = {
             console.log(`Created new tracking alert for ${gasLevel} GWEI, for user ${interaction.user.username}, with ID:${result.insertedId}`);
         }
         // Send confirmation message 
-        await interaction.reply(`Set alert at ${gasLevel} GWEI!`);
+        await interaction.reply({ content: `Set alert at ${gasLevel} GWEI!`, ephemeral: true });
     },
 };

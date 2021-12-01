@@ -11,6 +11,6 @@ module.exports = {
         const gasPrice = parseInt(response.data.result.ProposeGasPrice);
 
         console.log(`${interaction.user.id} requested gas at:`, gasPrice);
-        await interaction.reply(`Current average gas fee: **${gasPrice}** GWEI`);
+        await interaction.reply({ content: `Current average gas fee: **${gasPrice}** GWEI`, ephemeral: true });
     },
 };

@@ -19,6 +19,6 @@ module.exports = {
 
         finalString = finalString.substring(0, finalString.length - 2);
 
-        await interaction.reply(finalString + ".");
+        await interaction.reply({ content: finalString + ".", ephemeral: true });
     },
 };
