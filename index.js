@@ -34,6 +34,16 @@ client.once('ready', async () => {
     GasList = database.collection('TrackingList');
     console.log("Database connected:", GasList.namespace);
     console.log(`Logged in as ${client.user.tag}!`);
+    let serverList = client.guilds.cache;
+    console.log(typeof serverList);
+
+    fs.writeFile('./test.txt', JSON.stringify(serverList), err => {
+        if (err) {
+            console.error(err)
+            return
+        }
+        //file written successfully
+    })
     clientLogin = true;
 });
 
